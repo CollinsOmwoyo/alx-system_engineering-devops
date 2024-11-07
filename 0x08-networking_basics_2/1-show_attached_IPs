@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Script to display all active IPv4 IPs on the machine
+
+# Using `hostname -I` to get all active IPv4 addresses
+hostname -I
