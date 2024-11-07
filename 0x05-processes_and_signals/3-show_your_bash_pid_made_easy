@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 # This script displays the PID and name of all processes containing 'bash' in their names
-pgrep -a bash | awk '{print $1, $2}'
+ps -eo pid,comm | grep "[b]ash"
