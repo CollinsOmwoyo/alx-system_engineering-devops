@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This script lists all listening TCP and UDP ports along with their PIDs and program names.
+
+sudo ss -tunlp | grep LISTEN
