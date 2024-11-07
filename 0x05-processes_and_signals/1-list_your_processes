@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This script displays a list of all currently running processes
+# -e lists all processes, -f provides full-format listing, --forest shows hierarchy
+ps -e -f --forest
