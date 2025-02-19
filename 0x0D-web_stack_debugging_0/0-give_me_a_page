@@ -2,3 +2,4 @@
 # Start Apache
 # page conatining Hello Holberton
 service apache2 start
+echo "Hello ALX" > /var/www/html/index.html
