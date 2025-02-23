@@ -1,34 +1,31 @@
 #!/usr/bin/env bash
-# configures new
+# Configures an Ubuntu server with Nginx and custom settings
 
-# Install nginx on web-01 server
-apt-get -y update
-apt-get -y install nginx
+# Install nginx
+apt-get update -y && apt-get install -y nginx
 
-# Add custom response header to know the server name for debugging
+# Get the hostname
 HOST_NAME=$(hostname)
-HEADER="\\\n\tadd_header X-Served-By $HOST_NAME;\n"
-FIND=$(grep "X-Server-by" /etc/nginx/sites-available/default)
-if [[ -z $FIND ]]; then
-    sed -i "23i $HEADER" /etc/nginx/sites-available/default
+
+# Modify Nginx config to add X-Served-By header
+CONFIG_FILE="/etc/nginx/sites-available/default"
+if ! grep -q "X-Served-By" "$CONFIG_FILE"; then
+    sed -i '/server_name _;/a \    add_header X-Served-By '"$HOST_NAME"';' "$CONFIG_FILE"
 fi
 
-# Create a top index.html page
+# Create a simple index.html
 echo "Hello World!" > /var/www/html/index.html
 
-# Add to the nginx configuration file a redirection to another page
-FIND=$(grep "redirect_me" /etc/nginx/sites-available/default)
-STRING="\\\n\tlocation /redirect_me {\n\t\t return 301 https://www.youtube.com/watch?v=bctljPSnV6s&t=350s;\n\t}\n"
-if [[ -z $FIND ]]; then
-    sed -i "42i $STRING" /etc/nginx/sites-available/default
+# Configure a redirect
+if ! grep -q "location /redirect_me" "$CONFIG_FILE"; then
+    echo -e "\n\tlocation /redirect_me {\n\t\treturn 301 https://www.youtube.com/watch?v=bctljPSnV6s&t=350s;\n\t}" >> "$CONFIG_FILE"
 fi
 
-# Add to the nginx configuration file a error page 404
-FIND=$(grep "error_page 404" /etc/nginx/sites-available/default)
-ERROR="\\\n\terror_page 404 /custom_404.html;\n"
-if [[ -z $FIND ]]; then
-    echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
-    sed -i "40i $ERROR" /etc/nginx/sites-available/default
+# Configure a custom 404 page
+echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
+if ! grep -q "error_page 404" "$CONFIG_FILE"; then
+    echo -e "\n\terror_page 404 /custom_404.html;" >> "$CONFIG_FILE"
 fi
 
-service nginx restart
+# Validate and restart Nginx
+nginx -t && service nginx restart
