@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 # Configure Nginx to listen on 80
 
 # Update the Nginx configuration file
