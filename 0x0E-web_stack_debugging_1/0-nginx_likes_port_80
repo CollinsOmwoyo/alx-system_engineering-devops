@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+# Configure Nginx to listen on 80
+
+# Update the Nginx configuration file
+rm /etc/nginx/sites-enabled/default
+#configure for all active IPv4 IPs
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+#restart Nginx
+service nginx restart
+
