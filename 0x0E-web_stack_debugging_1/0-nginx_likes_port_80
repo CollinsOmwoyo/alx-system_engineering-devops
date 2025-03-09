@@ -1,16 +1,5 @@
 #!/usr/bin/env bash
-# Ensure Nginx is installed
-apt-get update -y && apt-get install -y nginx
-
-# Ensure Nginx listens on port 80 for all IPv4 IPs
-sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
-sed -i 's/listen \[::\]:80 default_server;//g' /etc/nginx/sites-available/default
-
-# Restart Nginx service
-systemctl restart nginx
-
-# Allow traffic on port 80 if UFW is enabled
-ufw allow 80/tcp || true
-
-# Verify Nginx is listening on port 80
-ss -tlnp | grep ":80"
+#configure nginx server to listen for port 80
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+#ngix restart
+service nginx restart
